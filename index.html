@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberShield | Security Toolkit</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0b1120;
+            color: #e2e8f0;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            padding: 25px 8%;
+            background: #111827;
+            border-bottom: 1px solid #263449;
+        }
+
+        header h1 {
+            color: #22c55e;
+            font-size: 30px;
+        }
+
+        header p {
+            color: #94a3b8;
+            margin-top: 8px;
+        }
+
+        main {
+            padding: 45px 8%;
+        }
+
+        .welcome {
+            margin-bottom: 35px;
+        }
+
+        .welcome h2 {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .welcome p {
+            color: #94a3b8;
+            line-height: 1.7;
+        }
+
+        .tools {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 22px;
+        }
+
+        .card {
+            background: #111827;
+            border: 1px solid #263449;
+            padding: 25px;
+            border-radius: 14px;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            border-color: #22c55e;
+            transform: translateY(-4px);
+        }
+
+        .icon {
+            font-size: 36px;
+            margin-bottom: 18px;
+        }
+
+        .card h3 {
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.7;
+            min-height: 70px;
+        }
+
+        button {
+            background: #22c55e;
+            color: #052e16;
+            border: none;
+            padding: 12px 18px;
+            margin-top: 18px;
+            border-radius: 7px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #16a34a;
+            color: white;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+            border-top: 1px solid #263449;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>🛡️ CyberShield</h1>
+        <p>Your Personal Cybersecurity Toolkit</p>
+    </header>
+
+    <main>
+        <section class="welcome">
+            <h2>Security Dashboard</h2>
+            <p>
+                Welcome to CyberShield! Explore security tools
+                and learn how to protect your digital information.
+            </p>
+        </section>
+
+        <section class="tools">
+            <div class="card">
+                <div class="icon">🔑</div>
+                <h3>Password Checker</h3>
+                <p>Check password strength and get suggestions for creating stronger passwords.</p>
+                <button onclick="checkPassword()">Open Tool</button>
+            </div>
+
+            <div class="card">
+                <div class="icon">🎣</div>
+                <h3>Phishing Detector</h3>
+                <p>Examine URLs for suspicious patterns that may indicate phishing attempts.</p>
+                <button onclick="checkURL()">Open Tool</button>
+            </div>
+
+            <div class="card">
+                <div class="icon">🔐</div>
+                <h3>File Encryption</h3>
+                <p>Explore secure file encryption and decryption.</p>
+                <button onclick="comingSoon('File Encryption')">Open Tool</button>
+            </div>
+
+            <div class="card">
+                <div class="icon">📁</div>
+                <h3>File Integrity</h3>
+                <p>Generate file hashes and compare them to detect changes.</p>
+                <button onclick="document.getElementById('fileUpload').click()">
+    Open Tool
+</button>
+
+<form action="/file-integrity" method="POST" enctype="multipart/form-data">
+    <input type="file" id="fileUpload" name="file"
+           style="display:none" onchange="this.form.submit()">
+</form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        CyberShield © 2026 | Educational Cybersecurity Project
+    </footer>
+
+    <script>
+        function checkPassword() {
+            const password = prompt(
+                "Enter a dummy password to test its strength:"
+            );
+
+            if (password === null) {
+                return;
+            }
+
+            if (password.length === 0) {
+                alert("Please enter a password.");
+                return;
+            }
+
+            let score = 0;
+            const suggestions = [];
+
+            if (password.length >= 12) {
+                score++;
+            } else {
+                suggestions.push("Use at least 12 characters.");
+            }
+
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) {
+                score++;
+            } else {
+                suggestions.push("Include uppercase and lowercase letters.");
+            }
+
+            if (/[0-9]/.test(password)) {
+                score++;
+            } else {
+                suggestions.push("Include a number.");
+            }
+
+            if (/[^A-Za-z0-9]/.test(password)) {
+                score++;
+            } else {
+                suggestions.push("Include a special character.");
+            }
+
+            let strength;
+
+            if (score <= 1) {
+                strength = "Weak";
+            } else if (score === 2) {
+                strength = "Moderate";
+            } else if (score === 3) {
+                strength = "Good";
+            } else {
+                strength = "Strong";
+            }
+
+            let message = "Password Strength: " + strength;
+
+            if (suggestions.length > 0) {
+                message += "\n\nSuggestions:\n- " + suggestions.join("\n- ");
+            } else {
+                message += "\n\nAll basic checks passed!";
+            }
+
+            alert(message);
+        }
+
+        function checkURL() {
+    const input = prompt("Enter a URL to check:");
+
+    if (input === null) return;
+
+    let url;
+
+    try {
+        url = new URL(input.trim());
+    } catch {
+        alert("Invalid URL! Example: https://example.com");
+        return;
+    }
+
+    if (!["http:", "https:"].includes(url.protocol)) {
+        alert("Please enter an HTTP or HTTPS URL.");
+        return;
+    }
+
+    const warnings = [];
+
+    if (url.protocol !== "https:") {
+        warnings.push("This URL does not use HTTPS.");
+    }
+
+    if (url.username || url.password) {
+        warnings.push("The URL contains unusual login information.");
+    }
+
+    if (/^\d{1,3}(\.\d{1,3}){3}$/.test(url.hostname)) {
+        warnings.push("The hostname is an IP address.");
+    }
+
+    if (url.hostname.split(".").length > 4) {
+        warnings.push("The hostname has many subdomains.");
+    }
+
+    if (url.href.length > 150) {
+        warnings.push("The URL is unusually long.");
+    }
+
+    let result = "URL Analysis\n\nDomain: " + url.hostname;
+
+    if (warnings.length > 0) {
+        result += "\n\nWarnings:\n- " + warnings.join("\n- ");
+        result += "\n\nPlease verify this URL carefully.";
+    } else {
+        result += "\n\nNo basic warning patterns detected.";
+        result += "\nThis does not guarantee the URL is safe.";
+    }
+
+    alert(result);
+}function comingSoon(toolName) {
+            alert(toolName + " will be implemented in the next step!");
+        }
+    </script>
+</body>
+</html>

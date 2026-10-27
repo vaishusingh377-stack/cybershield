@@ -1,0 +1,40 @@
+from flask import Flask, render_template
+import hashlib
+app = Flask(__name__)
+def calculate_file_hash(file_path):
+    sha256 = hashlib.sha256()
+
+    with open(file_path, "rb") as file:
+        for chunk in iter(lambda: file.read(4096), b""):
+            sha256.update(chunk)
+
+    return sha256.hexdigest()
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+@app.route("/file-integrity", methods=["GET", "POST"])
+def file_integrity():
+    from flask import request
+    import os
+    import tempfile
+
+    result = None
+
+    if request.method == "POST":
+        uploaded_file = request.files.get("file")
+
+        if uploaded_file and uploaded_file.filename:
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                uploaded_file.save(temp_file)
+                temp_path = temp_file.name
+
+            try:
+                result = calculate_file_hash(temp_path)
+            finally:
+                os.remove(temp_path)
+
+    return render_template("index.html", file_hash=result)
+
+if __name__ == "__main__":
+    app.run(debug=True)
